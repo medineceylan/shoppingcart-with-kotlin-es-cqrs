@@ -13,7 +13,8 @@ This is a sample project that demonstrates how shopping cart implemented by usin
 * Hexagonal Architecture
 
 ```
-###Domain Modeling:
+
+__*Domain Modeling:*__
 
 ```
 Because shopping cart has a couple of aggregate (product,cart,shipment,payment etc..) I just implemented
@@ -23,10 +24,9 @@ an aggregate which includes cart, cart item, price and productId.
 --Because Cart and CartItem have ids they are entities
 --Price is a value object it doesn't have any identifier
 --if product is in cart it's price doesn't change
-
-Because product is another aggregate root I seperated it from this aggregate and I just put product id in this aggregate.
-
-**Domain layer is my core layer and shouldn't use any framework 
+--Because product is another aggregate root I seperated it from this aggregate and 
+  I just put product id in this aggregate.
+--Domain layer shouldn't use any framework 
 
 ```
 
