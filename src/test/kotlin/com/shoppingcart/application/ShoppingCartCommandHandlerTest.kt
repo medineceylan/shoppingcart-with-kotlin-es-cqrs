@@ -29,16 +29,14 @@ internal class ShoppingCartCommandHandlerTest {
 
     @Before
     fun startUp() {
-
-        every { eventStore.allForHistory(cartId) } returns emptyList()
+        every { eventStore.loadHistory(cartId) } returns emptyList()
     }
-
 
     @Test
     fun `should not raise any event when add product to cart command is invalid`() {
 
         val addProductToCartCommand = AddProductToCartCommand(productId, -10, cartId)
-        every { eventStore.allForHistory(cartId) } returns emptyList()
+        every { eventStore.loadHistory(cartId) } returns emptyList()
         shoppingCartCommandHandler.handle(addProductToCartCommand)
 
         assertTrue { shoppingCartCommandHandler.getOccurredEvents().isEmpty() }
@@ -63,7 +61,7 @@ internal class ShoppingCartCommandHandlerTest {
     fun `should remove and raise product removed from cart event  when command is valid`() {
 
         val events = mutableListOf(aProductRemovedFromCartEvent())
-        every { eventStore.allForHistory(cartId) } returns mutableListOf(aProductAddedToCartEvent())
+        every { eventStore.loadHistory(cartId) } returns mutableListOf(aProductAddedToCartEvent())
         every { eventBus.sendAll(events) }.answers { nothing }
         every { eventStore.saveAll(events) }.answers { nothing }
 
@@ -101,7 +99,7 @@ internal class ShoppingCartCommandHandlerTest {
 
         val events = mutableListOf(anAmountOfProductChangedEvent(4))
 
-        every { eventStore.allForHistory(cartId) } returns mutableListOf(aProductAddedToCartEvent())
+        every { eventStore.loadHistory(cartId) } returns mutableListOf(aProductAddedToCartEvent())
         every { eventBus.sendAll(events) }.answers { nothing }
         every { eventStore.saveAll(events) }.answers { nothing }
 

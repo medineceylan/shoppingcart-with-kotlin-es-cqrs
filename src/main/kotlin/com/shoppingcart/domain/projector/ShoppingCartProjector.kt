@@ -1,5 +1,6 @@
 package com.shoppingcart.com.shoppingcart.domain.projector
 
+import arrow.effects.IO
 import com.shoppingcart.com.shoppingcart.domain.events.Event.*
 import com.shoppingcart.domain.DomainError
 import com.shoppingcart.domain.DomainError.ProductNotInCartException
@@ -55,8 +56,9 @@ class ShoppingCartProjector(private val repository: ShoppingCartProjectionReposi
             addCartItems(shoppingCartItems, event)
         }
 
-
     }
+
+
 
     private fun removeCartItems(cartItems: List<CartItemEntity>, event: AmountOfProductChangedEvent) {
 

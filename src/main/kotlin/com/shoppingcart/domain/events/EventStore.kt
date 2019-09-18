@@ -4,13 +4,14 @@ import java.util.*
 
 interface EventStore {
 
+
     fun save(event: Event)
 
-    fun saveAll(events: List<Event>) {
+    fun saveAll(events:EventList) {
         events.forEach(this::save)
     }
 
-    fun allForHistory(cartId: UUID): List<Event>
+    fun loadHistory(cartId: UUID): EventList
 
     fun exists(cartId: UUID): Boolean
 

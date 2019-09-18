@@ -4,7 +4,7 @@ interface EventBus {
 
     fun send(event: Event)
 
-    fun sendAll(events: List<Event>) {
+    fun sendAll(events: EventList) {
         events.forEach(this::send)
     }
 }

@@ -5,6 +5,7 @@ import com.shoppingcart.com.shoppingcart.application.CommandBus
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Component
 
+typealias  CommandList=List<Command>
 @Component
 class CommandBusImpl(private val publisher: ApplicationEventPublisher) : CommandBus {
 

@@ -1,6 +1,7 @@
 package com.shoppingcart.com.shoppingcart.infrastructure.stubs
 
 import com.shoppingcart.com.shoppingcart.domain.events.Event
+import com.shoppingcart.com.shoppingcart.domain.events.EventList
 import com.shoppingcart.com.shoppingcart.domain.events.EventStore
 import org.springframework.stereotype.Service
 import java.util.*
@@ -15,12 +16,12 @@ class InMemoryEventStore : EventStore {
         events.add(event)
     }
 
-    override fun allForHistory(cartId: UUID): List<Event> {
+    override fun loadHistory(cartId: UUID):EventList {
         return events.filter { item->item.domainEntityId==cartId }
     }
 
     override fun exists(id: UUID): Boolean {
-        return allForHistory(id).isNotEmpty()
+        return loadHistory(id).isNotEmpty()
     }
 
     fun clear() {

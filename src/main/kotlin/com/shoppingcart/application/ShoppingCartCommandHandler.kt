@@ -6,6 +6,7 @@ import com.shoppingcart.application.Command.*
 import com.shoppingcart.com.shoppingcart.domain.events.Event
 import com.shoppingcart.com.shoppingcart.domain.events.Event.*
 import com.shoppingcart.com.shoppingcart.domain.events.EventBus
+import com.shoppingcart.com.shoppingcart.domain.events.EventList
 import com.shoppingcart.com.shoppingcart.domain.events.EventStore
 import com.shoppingcart.domain.Invalid
 import com.shoppingcart.domain.Valid
@@ -94,13 +95,13 @@ class ShoppingCartCommandHandler(private val eventBus: EventBus, private val eve
     private fun applyHistoryAndGetCart(cartId: UUID): CartEntity {
 
         val cart = CartEntity(cartId)
-        cart.applyAll(eventStore.allForHistory(cartId))
+        cart.applyAll(eventStore.loadHistory(cartId))
 
         return cart
 
     }
 
-    private fun getAndClearOccurredEvents(): List<Event> {
+    private fun getAndClearOccurredEvents(): EventList {
 
         val events = this.occurredEvents.toMutableList()
         this.occurredEvents.clear()
@@ -108,7 +109,7 @@ class ShoppingCartCommandHandler(private val eventBus: EventBus, private val eve
         return events
     }
 
-    fun getOccurredEvents(): List<Event> {
+    fun getOccurredEvents(): EventList{
         return this.occurredEvents.toMutableList()
     }
 

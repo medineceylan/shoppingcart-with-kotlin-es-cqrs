@@ -3,11 +3,14 @@ package com.shoppingcart.domain.aggregate
 import arrow.core.Failure
 import arrow.core.Success
 import arrow.core.Try
-import com.shoppingcart.application.Command.*
+import com.shoppingcart.application.Command.AddProductToCartCommand
+import com.shoppingcart.application.Command.ChangeAmountOfProductCommand
 import com.shoppingcart.com.shoppingcart.domain.events.Event
 import com.shoppingcart.com.shoppingcart.domain.events.Event.*
+import com.shoppingcart.com.shoppingcart.domain.events.EventList
 import com.shoppingcart.domain.DomainError
-import com.shoppingcart.domain.DomainError.*
+import com.shoppingcart.domain.DomainError.AmountMustBePositiveException
+import com.shoppingcart.domain.DomainError.ProductNotInCartException
 import com.shoppingcart.domain.Invalid
 import com.shoppingcart.domain.Valid
 import com.shoppingcart.domain.Validated
@@ -27,7 +30,7 @@ class CartEntity(var aggregateRootId: UUID) {
         return applyAll(events.toList())
     }
 
-    fun applyAll(events: List<Event>): CartEntity {
+    fun applyAll(events: EventList): CartEntity {
 
         events.forEach {
             when (it) {
@@ -104,12 +107,9 @@ class CartEntity(var aggregateRootId: UUID) {
 
     private fun validateProduct(productId: UUID): ValidationResult {
 
-        val result = find(productId)
-
-        when (result) {
+        when (find(productId)) {
             is Success -> return Valid(productId)
             is Failure -> return Invalid(ProductNotInCartException(productId, "Product not in the cart"))
-
         }
     }
 

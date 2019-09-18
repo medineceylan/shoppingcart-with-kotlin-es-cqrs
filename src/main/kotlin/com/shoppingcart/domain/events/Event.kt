@@ -2,6 +2,8 @@ package com.shoppingcart.com.shoppingcart.domain.events
 
 import java.util.*
 
+typealias EventList = List<Event>
+
 sealed class Event(var domainEntityId: UUID) {
 
     data class ProductAddedToCartEvent(val productId: UUID, val price: Int, val cartId: UUID) : Event(cartId)
