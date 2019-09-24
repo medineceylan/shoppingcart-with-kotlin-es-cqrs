@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.TestInstance
 import org.mockito.Mockito.times
 import java.util.*
+import kotlin.test.assertFalse
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal class ShoppingCartCommandHandlerTest {
@@ -39,7 +40,6 @@ internal class ShoppingCartCommandHandlerTest {
         every { eventStore.loadHistory(cartId) } returns emptyList()
         shoppingCartCommandHandler.handle(addProductToCartCommand)
 
-        assertTrue { shoppingCartCommandHandler.getOccurredEvents().isEmpty() }
         verify { eventBus wasNot Called }
 
     }

@@ -1,5 +1,7 @@
 package com.shoppingcart.domain.aggregate
 
+import com.shoppingcart.domain.aggregate.annotations.ValueObject
+
 @ValueObject
 class Price(var price: Int) {
 

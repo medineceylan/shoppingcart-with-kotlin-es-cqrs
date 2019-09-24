@@ -6,8 +6,10 @@ import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Component
 
 typealias  CommandList=List<Command>
+
+
 @Component
-class CommandBusImpl(private val publisher: ApplicationEventPublisher) : CommandBus {
+class SpringCommandBus(private val publisher: ApplicationEventPublisher) : CommandBus {
 
     override fun send(command: Command) {
         publisher.publishEvent(command)

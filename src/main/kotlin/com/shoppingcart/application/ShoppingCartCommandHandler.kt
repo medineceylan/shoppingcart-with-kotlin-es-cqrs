@@ -6,7 +6,6 @@ import com.shoppingcart.application.Command.*
 import com.shoppingcart.com.shoppingcart.domain.events.Event
 import com.shoppingcart.com.shoppingcart.domain.events.Event.*
 import com.shoppingcart.com.shoppingcart.domain.events.EventBus
-import com.shoppingcart.com.shoppingcart.domain.events.EventList
 import com.shoppingcart.com.shoppingcart.domain.events.EventStore
 import com.shoppingcart.domain.Invalid
 import com.shoppingcart.domain.Valid
@@ -20,18 +19,17 @@ import java.util.*
 class ShoppingCartCommandHandler(private val eventBus: EventBus, private val eventStore: EventStore) {
 
     private val log: Logger = LoggerFactory.getLogger(this.javaClass)
-    private val occurredEvents: MutableList<Event> = mutableListOf()
 
     @CommandListener
     fun handle(command: AddProductToCartCommand) {
-        val cart = applyHistoryAndGetCart(command.cartId)
+
+        val cart = applyHistoryAndPrepareCart(command.cartId)
 
         when (val result = cart.handle(command)) {
             is Valid -> {
                 val newEvent = ProductAddedToCartEvent(productId = command.productId, price = command.price, cartId = command.cartId)
                 cart.apply(newEvent)
-                raise(newEvent)
-                storeAndPublishEvents()
+                storeAndPublishEvents(newEvent)
             }
             is Invalid -> log.error(result.err.message)
         }
@@ -40,31 +38,29 @@ class ShoppingCartCommandHandler(private val eventBus: EventBus, private val eve
     @CommandListener
     fun handle(command: RemoveProductFromCartCommand) {
 
-        val cart = applyHistoryAndGetCart(command.cartId)
+        val cart = applyHistoryAndPrepareCart(command.cartId)
         val productRemovedFromCartEvent = ProductRemovedFromCartEvent(productId = command.productId, cartId = command.cartId)
 
         when (cart.apply(productRemovedFromCartEvent)) {
-            is Success -> raise(productRemovedFromCartEvent)
-            is Failure -> raise(ProductNotFoundInCartEvent(command.productId, command.cartId))
+            is Success -> storeAndPublishEvents(productRemovedFromCartEvent)
+            is Failure -> storeAndPublishEvents(ProductNotFoundInCartEvent(command.productId, command.cartId))
         }
-        storeAndPublishEvents()
 
     }
 
     @CommandListener
     fun handle(command: ChangeAmountOfProductCommand) {
 
-        val cart = applyHistoryAndGetCart(command.cartId)
+        val cart = applyHistoryAndPrepareCart(command.cartId)
 
         when (val cmdResult = cart.handle(command)) {
             is Valid -> {
                 val productChangedEvent = AmountOfProductChangedEvent(cartId = command.cartId, productId = command.productId, amount = command.amount)
 
                 when (cart.apply(productChangedEvent)) {
-                    is Success -> raise(productChangedEvent)
-                    is Failure -> raise(ProductNotFoundInCartEvent(command.productId, command.cartId))
+                    is Success -> storeAndPublishEvents(productChangedEvent)
+                    is Failure -> storeAndPublishEvents(ProductNotFoundInCartEvent(command.productId, command.cartId))
                 }
-                storeAndPublishEvents()
             }
             is Invalid -> log.error(cmdResult.err.message)
         }
@@ -74,49 +70,27 @@ class ShoppingCartCommandHandler(private val eventBus: EventBus, private val eve
     @CommandListener
     fun handle(command: CalculateTotalPriceCommand) {
 
-        val cart = applyHistoryAndGetCart(command.cartId)
+        val cart = applyHistoryAndPrepareCart(command.cartId)
         val newEvent = TotalPriceCalculatedEvent(cartId = command.cartId)
         cart.apply(newEvent)
-        raise(newEvent)
-        storeAndPublishEvents()
+        storeAndPublishEvents(newEvent)
     }
 
 
-    private fun storeAndPublishEvents() {
+    private fun storeAndPublishEvents(event: Event) {
 
-        val newlyOccurredEvents = getAndClearOccurredEvents()
-        if (newlyOccurredEvents.isEmpty()) return
-
-        eventBus.sendAll(newlyOccurredEvents)
-        eventStore.saveAll(newlyOccurredEvents)
+        log.info("Raised new domain event. [type=${event::class.simpleName}]")
+        eventBus.send(event)
+        eventStore.save(event)
     }
 
 
-    private fun applyHistoryAndGetCart(cartId: UUID): CartEntity {
+    private fun applyHistoryAndPrepareCart(cartId: UUID): CartEntity {
 
         val cart = CartEntity(cartId)
         cart.applyAll(eventStore.loadHistory(cartId))
-
         return cart
 
     }
-
-    private fun getAndClearOccurredEvents(): EventList {
-
-        val events = this.occurredEvents.toMutableList()
-        this.occurredEvents.clear()
-        log.info("Return occurred domain events. [numberOfEvents=${events.size}]")
-        return events
-    }
-
-    fun getOccurredEvents(): EventList{
-        return this.occurredEvents.toMutableList()
-    }
-
-    private fun raise(event: Event) {
-        occurredEvents.add(event)
-        log.info("Raised new domain event. [type=${event::class.simpleName}]")
-    }
-
 
 }

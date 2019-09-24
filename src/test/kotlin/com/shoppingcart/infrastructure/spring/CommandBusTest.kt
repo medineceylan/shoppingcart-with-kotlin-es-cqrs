@@ -2,9 +2,8 @@ package com.shoppingcart.infrastructure.spring
 
 import com.shoppingcart.application.Command
 import com.shoppingcart.application.CommandListener
-import com.shoppingcart.com.shoppingcart.application.CommandBus
-import com.shoppingcart.com.shoppingcart.infrastructure.spring.CommandBusImpl
-import com.shoppingcart.infrastructure.spring.CommandBusImplTest.CommandHandlerSample
+import com.shoppingcart.com.shoppingcart.infrastructure.spring.SpringCommandBus
+import com.shoppingcart.infrastructure.spring.CommandBusTest.CommandHandlerSample
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -17,14 +16,14 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit.SECONDS
 
 @RunWith(SpringRunner::class)
-@ContextConfiguration(classes = [CommandBusImpl::class, CommandHandlerSample::class])
-class CommandBusImplTest {
+@ContextConfiguration(classes = [SpringCommandBus::class, CommandHandlerSample::class])
+class CommandBusTest {
 
     @Autowired
     private lateinit var commandHandlerSample: CommandHandlerSample
 
     @Autowired
-    private lateinit var commandBus: CommandBus
+    private lateinit var commandBus: com.shoppingcart.com.shoppingcart.application.CommandBus
 
     companion object {
 

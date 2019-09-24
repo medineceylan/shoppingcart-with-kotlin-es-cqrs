@@ -7,7 +7,7 @@ import com.shoppingcart.com.shoppingcart.domain.projector.ShoppingCartProjection
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
-class InMemoryShoppingCartRepositoryImpl : ShoppingCartProjectionRepository {
+class InMemoryShoppingCartRepository : ShoppingCartProjectionRepository {
 
     private val carts=ConcurrentHashMap<UUID, MutableList<CartItemEntity>>()
 
@@ -15,8 +15,8 @@ class InMemoryShoppingCartRepositoryImpl : ShoppingCartProjectionRepository {
 
 
     override fun getCartEntityItemsOfProduct(cartId: UUID, productId: UUID): List<CartItemEntity> {
+        TODO()
 
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun removeCartItem(id: UUID) {

@@ -1,4 +1,4 @@
-package com.shoppingcart.domain.aggregate
+package com.shoppingcart.domain.aggregate.annotations
 
 @Target(AnnotationTarget.FUNCTION, AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)

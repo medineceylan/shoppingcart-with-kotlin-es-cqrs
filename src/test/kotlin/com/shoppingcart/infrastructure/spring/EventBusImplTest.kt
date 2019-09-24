@@ -2,9 +2,9 @@ package com.shoppingcart.infrastructure.spring
 
 import com.shoppingcart.com.shoppingcart.domain.events.Event.ProductAddedToCartEvent
 import com.shoppingcart.com.shoppingcart.domain.events.EventBus
-import com.shoppingcart.com.shoppingcart.infrastructure.spring.EventBusImpl
+import com.shoppingcart.com.shoppingcart.infrastructure.spring.SpringEventBus
 import com.shoppingcart.infrastructure.EventListener
-import com.shoppingcart.infrastructure.spring.EventBusImplTest.EventHandlerSample
+import com.shoppingcart.infrastructure.spring.EventBusTest.EventHandlerSample
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -18,8 +18,8 @@ import java.util.concurrent.TimeUnit
 
 
 @RunWith(SpringRunner::class)
-@ContextConfiguration(classes = [EventBusImpl::class, EventHandlerSample::class])
-class EventBusImplTest {
+@ContextConfiguration(classes = [SpringEventBus::class, EventHandlerSample::class])
+class EventBusTest {
 
     @Autowired
     private lateinit var eventBus: EventBus

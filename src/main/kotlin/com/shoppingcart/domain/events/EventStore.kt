@@ -4,7 +4,6 @@ import java.util.*
 
 interface EventStore {
 
-
     fun save(event: Event)
 
     fun saveAll(events:EventList) {

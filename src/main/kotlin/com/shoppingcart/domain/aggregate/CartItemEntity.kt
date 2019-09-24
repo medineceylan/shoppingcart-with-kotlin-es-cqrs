@@ -1,5 +1,6 @@
 package com.shoppingcart.domain.aggregate
 
+import com.shoppingcart.domain.aggregate.annotations.Entity
 import java.util.*
 
 @Entity

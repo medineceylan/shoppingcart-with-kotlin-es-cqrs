@@ -13,11 +13,12 @@ import com.shoppingcart.domain.DomainError.AmountMustBePositiveException
 import com.shoppingcart.domain.DomainError.ProductNotInCartException
 import com.shoppingcart.domain.Invalid
 import com.shoppingcart.domain.Valid
-import com.shoppingcart.domain.Validated
+import com.shoppingcart.domain.Validation
+import com.shoppingcart.domain.aggregate.annotations.AggregateRoot
+import com.shoppingcart.domain.aggregate.annotations.Entity
 import java.util.*
 
-typealias CmdResult = Validated<DomainError, UUID>
-typealias  ValidationResult = Validated<DomainError, UUID>
+typealias CommandResult = Validation<DomainError, UUID>
 
 @AggregateRoot
 @Entity
@@ -43,7 +44,7 @@ class CartEntity(var aggregateRootId: UUID) {
         return this
     }
 
-    fun handle(command: AddProductToCartCommand): CmdResult {
+    fun handle(command: AddProductToCartCommand): CommandResult {
 
         if (command.price <= 0) {
             return Invalid(AmountMustBePositiveException(command.price, "Price must be greater than 0!!"));
@@ -51,7 +52,7 @@ class CartEntity(var aggregateRootId: UUID) {
         return Valid(aggregateRootId)
     }
 
-    fun handle(command: ChangeAmountOfProductCommand): CmdResult {
+    fun handle(command: ChangeAmountOfProductCommand): CommandResult {
 
         if (command.amount <= 0) {
             return Invalid(AmountMustBePositiveException(command.amount, "Amount must be greater than 0!!"));
@@ -104,15 +105,6 @@ class CartEntity(var aggregateRootId: UUID) {
 
         return result
     }
-
-    private fun validateProduct(productId: UUID): ValidationResult {
-
-        when (find(productId)) {
-            is Success -> return Valid(productId)
-            is Failure -> return Invalid(ProductNotInCartException(productId, "Product not in the cart"))
-        }
-    }
-
 
     private fun find(productId: UUID): Try<CartItemEntity> {
 

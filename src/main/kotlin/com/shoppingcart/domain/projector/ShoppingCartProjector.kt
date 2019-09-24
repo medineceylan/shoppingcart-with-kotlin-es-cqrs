@@ -1,16 +1,14 @@
 package com.shoppingcart.com.shoppingcart.domain.projector
 
-import arrow.effects.IO
 import com.shoppingcart.com.shoppingcart.domain.events.Event.*
 import com.shoppingcart.domain.DomainError
 import com.shoppingcart.domain.DomainError.ProductNotInCartException
 import com.shoppingcart.domain.Invalid
 import com.shoppingcart.domain.Valid
-import com.shoppingcart.domain.Validated
+import com.shoppingcart.domain.Validation
 import java.util.*
 
-typealias ProjectorResult = Validated<DomainError, UUID>
-
+typealias ProjectorResult = Validation<DomainError, UUID>
 
 class ShoppingCartProjector(private val repository: ShoppingCartProjectionRepository) {
 
@@ -57,8 +55,6 @@ class ShoppingCartProjector(private val repository: ShoppingCartProjectionReposi
         }
 
     }
-
-
 
     private fun removeCartItems(cartItems: List<CartItemEntity>, event: AmountOfProductChangedEvent) {
 

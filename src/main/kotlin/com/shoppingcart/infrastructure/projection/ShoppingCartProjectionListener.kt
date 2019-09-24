@@ -3,9 +3,9 @@ package com.shoppingcart.infrastructure.projection
 import com.shoppingcart.com.shoppingcart.domain.events.Event.*
 import com.shoppingcart.com.shoppingcart.domain.projector.ShoppingCartProjector
 import com.shoppingcart.domain.Invalid
+import com.shoppingcart.infrastructure.EventListener
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.context.event.EventListener
 
 
 class ShoppingCartProjectionListener(private val shoppingCartProjector: ShoppingCartProjector) {

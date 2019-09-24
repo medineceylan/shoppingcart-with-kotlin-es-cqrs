@@ -18,6 +18,7 @@ class InMemoryEventStore : EventStore {
 
     override fun loadHistory(cartId: UUID):EventList {
         return events.filter { item->item.domainEntityId==cartId }
+
     }
 
     override fun exists(id: UUID): Boolean {

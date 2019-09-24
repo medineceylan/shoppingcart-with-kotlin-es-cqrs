@@ -3,7 +3,7 @@ package com.shoppingcart.com.shoppingcart.ports.rest
 import com.shoppingcart.application.Command.*
 import com.shoppingcart.com.shoppingcart.application.CommandBus
 import com.shoppingcart.domain.Valid
-import com.shoppingcart.domain.aggregate.CmdResult
+import com.shoppingcart.domain.aggregate.CommandResult
 import com.shoppingcart.ports.model.Request.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -18,7 +18,7 @@ class ShoppingCartController(private val commandBus: CommandBus) {
     private val log: Logger = LoggerFactory.getLogger(this.javaClass)
 
     @PostMapping("/add-product")
-    fun addProductToCart(@RequestBody request: AddProductToCartRequest): ResponseEntity<CmdResult> {
+    fun addProductToCart(@RequestBody request: AddProductToCartRequest): ResponseEntity<CommandResult> {
 
         // validate request
 
@@ -32,7 +32,7 @@ class ShoppingCartController(private val commandBus: CommandBus) {
     }
 
     @PostMapping("/remove-product")
-    fun removeProductFromCart(@RequestBody request: RemoveProductFromCartRequest): ResponseEntity<CmdResult> {
+    fun removeProductFromCart(@RequestBody request: RemoveProductFromCartRequest): ResponseEntity<CommandResult> {
         //validate request
 
         commandBus.send(RemoveProductFromCartCommand(
@@ -44,7 +44,7 @@ class ShoppingCartController(private val commandBus: CommandBus) {
     }
 
     @GetMapping("/calculate-price")
-    fun calculateTotalPrice(@RequestBody request: CalculateTotalPriceRequest): ResponseEntity<CmdResult> {
+    fun calculateTotalPrice(@RequestBody request: CalculateTotalPriceRequest): ResponseEntity<CommandResult> {
 
         //validate request
 
@@ -54,7 +54,7 @@ class ShoppingCartController(private val commandBus: CommandBus) {
     }
 
     @PatchMapping("/change-product-amount")
-    fun changeAmoutOfProduct(@RequestBody request: ChangeAmountOfProductRequest): ResponseEntity<CmdResult> {
+    fun changeAmoutOfProduct(@RequestBody request: ChangeAmountOfProductRequest): ResponseEntity<CommandResult> {
         //validate request
 
         commandBus.send(ChangeAmountOfProductCommand(cartId = request.cartId, productId = request.productId, amount = request.amount))
