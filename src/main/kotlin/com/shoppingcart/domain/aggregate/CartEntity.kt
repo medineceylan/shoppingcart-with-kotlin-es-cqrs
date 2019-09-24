@@ -108,11 +108,8 @@ class CartEntity(var aggregateRootId: UUID) {
 
     private fun find(productId: UUID): Try<CartItemEntity> {
 
-        val cartItem = cartItems.values.filter { item -> item.productId == productId }
+        cartItems.values.filter { item -> item.productId == productId }.takeIf(List<CartItemEntity>::isNotEmpty)?.let { return Success(it[0]) }
 
-        if (cartItem.isNotEmpty()) {
-            return Success(cartItem[0])
-        }
 
         return Failure(ProductNotInCartException(productId, " Product is not in cart!! "))
     }
