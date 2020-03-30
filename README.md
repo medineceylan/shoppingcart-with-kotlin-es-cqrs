@@ -1,5 +1,5 @@
 
-# Event Sourcing - CQRS poc with Kotlin
+# Event Sourcing - CQRS sample project with Kotlin
 
 This is a sample project that demonstrates how shopping cart implemented by using:  
 
